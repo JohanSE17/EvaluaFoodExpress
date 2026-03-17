@@ -1,0 +1,49 @@
+name: Python CI (lint + tests + coverage)
+
+# Ejecuta en cada push a main/master y en cada PR. Asegura que el código se verifica
+# antes de fusionar cambios.
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    # Ejecutar la misma suite en varias versiones de Python para detectar incompatibilidades.
+    strategy:
+      matrix:
+        python-version: [3.10, 3.11, 3.12]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          # Actualiza pip para evitar problemas de instalación.
+          python -m pip install --upgrade pip
+          # Dependencias usadas por los tests / linters en este repo.
+          pip install pytest pytest-cov ruff
+
+      - name: Lint with ruff
+        run: |
+          # Ruff revisa estilo, errores comunes y mantiene el código limpio.
+          ruff check .
+
+      - name: Run unit tests (pytest)
+        run: |
+          # Ejecuta la suite de tests y genera reporte de coverage.
+          pytest --cov=Tickets --cov-report=term-missing --cov-report=xml
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
