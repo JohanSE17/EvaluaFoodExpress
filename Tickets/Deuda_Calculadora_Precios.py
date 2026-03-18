@@ -1,7 +1,6 @@
 # calculadora_precios.py
 # Archivo encontrado en servidor de FoodExpress
 # No tocar? parece que funciona...
-
 def calc(precio, desc, prop, env, usuario):
     # calcula el total
     a = precio
@@ -38,7 +37,6 @@ def calc(precio, desc, prop, env, usuario):
     # formato
     total = "$" + str(int(d))
     return total
-
 def aplicar_cupon(total, cupon):
     # aplica cupon de descuento
     if cupon == "BIENVENIDA10":
@@ -50,14 +48,12 @@ def aplicar_cupon(total, cupon):
     else:
         total = total
     return total
-
 def calcular_propina(subtotal, porcentaje):
     # calcula propina
     prop = subtotal * (porcentaje / 100)
     if prop > 10000:
         prop = 10000  # tope maximo propina
     return prop
-
 # funcion principal que parece usarse desde la web
 def get_total(precio_plato, descuento, propina_porcentaje, tipo_entrega, datos_usuario, codigo_cupon):
     try:
